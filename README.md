@@ -1,3 +1,4 @@
 # FavBooks
 
-A books downloading web appliication
+A web application for accessing books.
+built with flask
