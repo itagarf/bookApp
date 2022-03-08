@@ -40,9 +40,11 @@ html::-webkit-scrollbar-track{
 html::-webkit-scrollbar-thumb{
     background:#444;
 }
+
+/*
 section{
     padding:5rem 9%;
-}
+}*/
 
 .heading{
     text-align: center;
@@ -86,46 +88,6 @@ section{
 }
 /* first page header*/
 
-.header .menu{
-    background: #999DA0;
-    padding:1.5rem 9%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.header .menu .signinAndPremium div,
-.header .menu .signinAndPremium a{
-    color:aliceblue;
-    font-size: 2.5rem;
-    margin-left: 1.5rem;
-    cursor: pointer;
-}
-.header .menu  .signinAndPremium div:hover,
-.header .menu .signinAndPremium a:hover{
-color:cadetblue;
-}
-.header .menu a img{
-    float: left;
-    height: 100px;
-    width: 100px;
-}
-.header .menu a {
-    font-size: 2.5rem;
-    align-items: center;
-    color:black;
-}
-.header .menu img{
-    float: left;
-    height: 100px;
-    width: 100px;
-}
-.header .menu  h3{
-    font-size: 2rem;
-    font-weight: 50px;
-    letter-spacing: 1.5px;
-    display: inline-block;
-}
-
 /*home*/
 
 .quoteContainer{
@@ -143,11 +105,11 @@ color:cadetblue;
 }
 .quoteContainer .middleQuote .quote h3{
     color:#444;
-    font-size: 3.5rem;
+    font-size: 25px;
 }
 .quoteContainer .middleQuote .quote p{
     color:#444;
-    font-size: 2rem;
+    font-size: 18px;
     line-height: 2;
     padding:1rem 0;
 }
@@ -158,13 +120,14 @@ color:cadetblue;
     margin-top: 2rem;
 }
 .quoteContainer .middleQuote .quotePic img{
-    height: 25rem;
+    height: 260px;
+    width: 320px;
 }
 
 
 .iconsContainer{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
     gap:1.5rem;
     background: #999DA0;
 }
@@ -172,12 +135,12 @@ color:cadetblue;
 .iconsContainer .icons{
     display: flex;
     align-items: center;
-    gap:1.5rem;
-    padding:2rem 0;
+    gap:20px;
+    padding:1rem 0;
 }
 
 .iconsContainer .icons i{
-    font-size: 3.5rem;
+    font-size: 1.5rem;
     color:aliceblue;
 }
 
@@ -191,439 +154,3 @@ color:cadetblue;
     font-size: 1.4rem;
     color:aliceblue;
 }
-/*
-
-  .middleQuote{
-      width: 100%;
-      margin: auto;
-      background-color: aliceblue;
-      display: flex;
-      flex-direction: column;
-  }
-  .quote{
-      font-size: 20px;
-     
-  }
-  .quotePic{
-      width: 50%;
-      float: right;
-  }
-  .quote img{
-      width: 300px;
-      height: 200px;
-  }
-*/
-
-  /*Login*/
-
-.signInContainer{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background:rgba(255,255,255,.9);
-    position:fixed;
-    top:0; right:-105%;
-    z-index: 10000;
-    height:100%;
-    width:100%;
-}
-
-.signInContainer.active{
-    right:0;
-}
-.signInContainer form{
-    background:#fff;
-    border:var(--border);
-    width:40rem;
-    padding:2rem;
-    box-shadow: var(--box-shadow);
-    border-radius: .5rem;
-    margin:2rem;
-}
-
-.signInContainer form h3{
-    font-size: 2.5rem;
-    text-transform: uppercase;
-    color:#444;
-    text-align: center;
-}
-
-.signInContainer form span{
-    display: block;
-    font-size: 1.5rem;
-    padding-top: 1rem;
-}
-
-.signInContainer form .box{
-    width: 100%;
-    margin:.7rem 0;
-    font-size: 1.6rem;
-    border:var(--border);
-    border-radius: .5rem;
-    padding:1rem 1.2rem;
-    color:#444;
-    text-transform: none;
-}
-
-.signInContainer form .checkbox{
-    display:flex;
-    align-items: center;
-    gap:.5rem;
-    padding:1rem 0;
-}
-
-.signInContainer form .checkbox label{
-    font-size: 1.5rem;
-    color:#666;
-    cursor: pointer;
-}
-
-.signInContainer form .btn{
-    text-align: center;
-    width:100%;
-    margin:1.5rem 0;
-}
-
-.signInContainer form p{
-    padding-top: .8rem;
-    color:#666;
-    font-size: 1.5rem;
-}
-
-.signInContainer form p a{
-    color:#27ae60;
-    text-decoration: underline;
-}
-.signInContainer form p a:hover{
-    color:#444;
-}
-
-.signInContainer #close-login-btn{
-    position: absolute;
-    top:1.5rem; right:2.5rem;
-    font-size: 5rem;
-    color:#444;
-    cursor: pointer;
-}
-
-/*Register*/
-.registerContainer{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background:rgba(255,255,255,.9);
-    position:fixed;
-    top:0; right:0;
-    z-index: 10000;
-    height:100%;
-    width:100%;
-}
-
-/*.registerContainer.active{
-    right:0;
-}*/
-.registerContainer form{
-    background:#fff;
-    border:var(--border);
-    width:40rem;
-    padding:2rem;
-    box-shadow: var(--box-shadow);
-    border-radius: .5rem;
-    margin:2rem;
-}
-
-.registerContainer form h3{
-    font-size: 2.5rem;
-    text-transform: uppercase;
-    color:#444;
-    text-align: center;
-}
-
-.registerContainer form span{
-    display: block;
-    font-size: 1.5rem;
-    padding-top: 1rem;
-}
-
-.registerContainer form .box{
-    width: 100%;
-    margin:.7rem 0;
-    font-size: 1.6rem;
-    border:var(--border);
-    border-radius: .5rem;
-    padding:1rem 1.2rem;
-    color:#444;
-    text-transform: none;
-}
-
-.registerContainer form .checkbox{
-    display:flex;
-    align-items: center;
-    gap:.5rem;
-    padding:1rem 0;
-}
-
-.registerContainer form .checkbox label{
-    font-size: 1.5rem;
-    color:#666;
-    cursor: pointer;
-}
-
-.registerContainer form .btn{
-    text-align: center;
-    width:100%;
-    margin:1.5rem 0;
-}
-
-.registerContainer form p{
-    padding-top: .8rem;
-    color:#666;
-    font-size: 1.5rem;
-}
-
-.registerContainer form p a{
-    color:#27ae60;
-    text-decoration: underline;
-}
-.registerContainer form p a:hover{
-    color:#444;
-}
-
-.registerContainer #close-register-btn{
-    position: absolute;
-    top:1.5rem; right:2.5rem;
-    font-size: 5rem;
-    color:#444;
-    cursor: pointer;
-}
-
-/******************************/
-
-/*Home.html*/
-
-.header .homemenu{
-    background-color: #FBFCFA;
-    padding:1.5rem 9%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.header .homemenu a img{
-    float: left;
-    height: 100px;
-    width: 100px;
-}
-.header .homemenu a {
-    font-size: 2.5rem;
-    align-items: center;
-    color:black;
-}
-.header .homemenu img{
-    float: left;
-    height: 100px;
-    width: 100px;
-}
-.header .homemenu  h3{
-    font-size: 2rem;
-    font-weight: 50px;
-    letter-spacing: 1.5px;
-    display: inline-block;
-}
-
-/*
-.header .homemenu ul{
-    float: center;
-}
-
-.header .homemenu  ul li{
-    display: inline-block;
-    margin: 0 40px 0 40px;
-    text-transform: uppercase;
-    letter-spacing: 1.4px;
-}
-.header .homemenu ul li a{
-  text-decoration: none;
-  color:var(--black);
-  font-size: 18px;
-}
-.header .homemenu ul li .current{
-  color:gray;
-}
-.header .homemenu ul li :hover{
-  color: #652a06;
-  font-size: 20px;
-}*/
-.header .homemenu .navbar{
-    text-align: center;
-}
-
-.header .homemenu  .navbar a{
-    color:var(--black);
-    display: inline-block;
-    padding:1.2rem;
-    font-size: 1.7rem;
-}
-.header .homemenu  .navbar a:hover{
-    font-size: 1.9rem;
-    color: #652a06;
-}
-.header .homemenu  .navbar a.active{
-    color:gray;
-}
-
-
-/*Slider on home page in hme.html*/
-
-.homehome{
-    margin: 0;
-    padding: 0;
-    justify-content: center;
-    align-items: center;
-  }
-.slider{
-    width: 800px;
-    height: 500px;
-    border-radius: 10px;
-    overflow: hidden;
-    right: 15%;
-  }
-  .slides{
-    width: 500%;
-    height: 500px;
-    display: flex;
-  }
-  .slides input{
-    display: none;
-  }
-  .slide{
-    width: 20%;
-    transition: 2s;
-  }
-  .slide img{
-    width: 800px;
-    height: 500px;
-  }
-  .navigation-manual{
-    position: absolute;
-    width: 800px;
-    margin-top: -40px;
-    display: flex;
-    justify-content: center;
-  }
-  .manual-btn{
-    border: 2px solid #40D3DC;
-    padding: 5px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: 1s;
-  }
-  .manual-btn:not(:last-child){
-    margin-right: 40px;
-  } 
-  .manual-btn:hover{
-    background: #40D3DC;
-  }  
-  #radio1:checked ~ .first{
-    margin-left: 0;
-  }
-  #radio2:checked ~ .first{
-    margin-left: -20%;
-  }
-  #radio3:checked ~ .first{
-    margin-left: -40%;
-  }
-  #radio4:checked ~ .first{
-    margin-left: -60%;
-  }
-  .navigation-auto{
-    position: absolute;
-    display: flex;
-    width: 800px;
-    justify-content: center;
-    margin-top: 460px;
-  }
-  .navigation-auto div{
-    border: 2px solid #40D3DC;
-    padding: 5px;
-    border-radius: 10px;
-    transition: 1s;
-  }
-  .navigation-auto div:not(:last-child){
-    margin-right: 40px;
-  }
-  
-  #radio1:checked ~ .navigation-auto .auto-btn1{
-    background: #40D3DC;
-  }
-  #radio2:checked ~ .navigation-auto .auto-btn2{
-    background: #40D3DC;
-  }
-  #radio3:checked ~ .navigation-auto .auto-btn3{
-    background: #40D3DC;
-  }
-  #radio4:checked ~ .navigation-auto .auto-btn4{
-    background: #40D3DC;
-  }
-  
-  /*Books section*/
-
-.books{
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
-    min-height: 100vh;}  
-.bookContainer{
-    display: flex;
-    width: 210px;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    box-shadow: 0 2px 4px rgb(0,0,0,25%);
-    margin: 3px;
-  }
-  
-  .bookContainerImage{
-    width:100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .bookContainerImage img{
-    width: 100%;
-    height: 240px;
-  }
-  
-  .bookContainerImage img:hover{
-    cursor: pointer;
-  }
-  
-  .description{
-    text-align: center;
-  }
-  .description h4{
-    font-size: 16px;
-    font-weight: 1.7rem;
-    letter-spacing: 1px;
-    color: var(--black);
-  }
-  .description h5{
-    font-size: 15px;
-    font-weight: 1rem;
-    color: brown;
-  }
-.description button{
-    margin-top: 1rem;
-    display:inline-block;
-    padding:.4rem 2rem;
-    border-radius: .3rem;
-    color:#fff;
-    background:#999DA0;
-    font-size: 1.7rem;
-    cursor: pointer;
-    font-weight: 300;
-}
-  

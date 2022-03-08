@@ -2,6 +2,8 @@ from flask import Flask, render_template, redirect, url_for, request, flash, ses
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, LoginManager, login_user, login_required, current_user, logout_user
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 #import pymysql
 #import secrets
 
@@ -11,6 +13,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 app.config['SECRET_KEY'] = '!"£$%^&*()LKJHGFDSA}:@<>?' 
 
 db = SQLAlchemy(app)
+
+admin = Admin(app, name='Admin Panel')
 
 login_manager = LoginManager()
 login_manager.login_view = 'login'
@@ -48,6 +52,29 @@ def registered():
     return redirect(url_for('login'))
 
 
+@app.route('/admin_register')
+def admin_register():
+    return render_template('adminRegister.html')
+
+@app.route('/admin_register', methods=['POST'])
+def admin_registered():
+    session['secret']='sec'
+    fullname = request.form.get('fullname')
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+
+    user = User.query.filter_by(email=email).first() 
+    if user:
+        flash('Email address already exists in the database!')
+        return redirect(url_for('admin_register'))
+
+    new_user = User(email=email, fullname=fullname, password=generate_password_hash(password, method='sha256'), is_admin = True)
+    db.session.add(new_user)
+    db.session.commit()
+    return redirect(url_for('login'))
+
+
 @app.route('/login')
 def login():
     return render_template('login.html')
@@ -65,7 +92,10 @@ def loggedIn():
         return redirect(url_for('login'))
 
     login_user(user, remember=remember)
-    return redirect(url_for('home'))
+    if current_user.is_admin == True:
+        return redirect(url_for('adminHome'))
+    else:
+        return redirect(url_for('home'))
 
 
 @app.route('/logout')
@@ -81,6 +111,12 @@ def home():
     return render_template('home.html', fullname= current_user.fullname)
 
 
+@app.route('/admin-home')
+@login_required
+def adminHome():
+    return render_template('adminHome.html', fullname= current_user.fullname)
+
+
 @app.route('/premium')
 def premium():
     return 'Premium Page'
@@ -93,11 +129,13 @@ class User(UserMixin, db.Model):
     fullname = db.Column(db.String(50))
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(255))
+    is_admin = db.Column(db.Boolean, default=False)
 
-    def __init__(self, fullname, email, password):
+    def __init__(self, fullname, email, password, is_admin):
         self.fullname = fullname
         self.email = email
         self.password = password
+        self.is_admin = is_admin
 
 if __name__ == '__main__':
         app.run(debug='TRUE')
