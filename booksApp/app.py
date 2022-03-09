@@ -39,17 +39,23 @@ def registered():
     session['secret']='sec'
     fullname = request.form.get('fullname')
     email = request.form.get('email')
-    password = request.form.get('password')
+    password1 = request.form.get('password1')
+    password2 = request.form.get('password2')
 
     user = User.query.filter_by(email=email).first() 
     if user:
-        flash('Email address already exists in the database!')
+        flash('Email address already exists in the database!', category="error")
         return redirect(url_for('register'))
-
-    new_user = User(email=email, fullname=fullname, password=generate_password_hash(password, method='sha256'))
-    db.session.add(new_user)
-    db.session.commit()
-    return redirect(url_for('login'))
+    
+    if password1 != password2:
+        flash('Both passwords do not match! Try registering again.', category='error')
+        return redirect(url_for('register'))
+    else:
+        new_user = User(email=email, fullname=fullname, password=generate_password_hash(password1, method='sha256'), is_admin=False)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('Account created. Please login with email and passsword', category='success')
+        return redirect(url_for('login'))
 
 
 @app.route('/admin_register')
@@ -61,18 +67,23 @@ def admin_registered():
     session['secret']='sec'
     fullname = request.form.get('fullname')
     email = request.form.get('email')
-    password = request.form.get('password')
-
+    password1 = request.form.get('password1')
+    password2 = request.form.get('password2')
 
     user = User.query.filter_by(email=email).first() 
     if user:
-        flash('Email address already exists in the database!')
+        flash('Email address already exists in the database!', category="error")
         return redirect(url_for('admin_register'))
-
-    new_user = User(email=email, fullname=fullname, password=generate_password_hash(password, method='sha256'), is_admin = True)
-    db.session.add(new_user)
-    db.session.commit()
-    return redirect(url_for('login'))
+    
+    if password1 != password2:
+        flash('Both passwords do not match! Try registering again.', category='error')
+        return redirect(url_for('admin_register'))
+    else:
+        new_user = User(email=email, fullname=fullname, password=generate_password_hash(password1, method='sha256'), is_admin=True)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('Account created. Please login with email and passsword', category='success')
+        return redirect(url_for('login'))
 
 
 @app.route('/login')
@@ -88,7 +99,7 @@ def loggedIn():
     user = User.query.filter_by(email=email).first()
 
     if not user or not check_password_hash(user.password, password):
-        flash('Please check your login details and try again.')
+        flash('Please check your login details and try again.', category='error')
         return redirect(url_for('login'))
 
     login_user(user, remember=remember)
@@ -97,6 +108,10 @@ def loggedIn():
     else:
         return redirect(url_for('home'))
 
+#A different method for login is:
+#@login_manager.user_loader
+#def load_user(id):
+#    return User.quer.get(int(id))
 
 @app.route('/logout')
 @login_required
@@ -131,7 +146,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(255))
     is_admin = db.Column(db.Boolean, default=False)
 
-    def __init__(self, fullname, email, password, is_admin):
+    def __init__(self, fullname, email, password,is_admin):
         self.fullname = fullname
         self.email = email
         self.password = password
