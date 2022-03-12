@@ -1,7 +1,89 @@
 {% extends "base.html" %}
 
-{% block content %}
-<h1 class="title">
-  Hello {{ fullname }}, welcome to the home Page
-</h1>
+{% block navigation %}
+
+
+<div class="hero-head">
+  <nav class="navbar">
+      <div class="container">
+          <div id="navbarMenuHeroA" class="navbar-menu">
+              <div class="navbar-end">
+                  <a href="#home" class="navbar-item">Home</a>
+                  <a href="#children" class="navbar-item">Children</a>
+                  <a href="#teensAndAdult" class="navbar-item">Teens & Adults</a>
+                  <a href="#news" class="navbar-item">News</a>
+                  <a href="#contactUs" class="navbar-item">Contact Us</a>
+              </div>
+          </div>
+      </div>
+  </nav>
+</div>
+
 {% endblock %}
+
+{% block content %}
+
+<!-- <section id="home"> -->
+    <div class="slider" id="home">
+    <div class="slides">
+      <input type="radio" name="radio-btn" id="radio1">
+      <input type="radio" name="radio-btn" id="radio2">
+      <input type="radio" name="radio-btn" id="radio3">
+      <input type="radio" name="radio-btn" id="radio4">
+
+      <div class="slide first">
+        <img src="{{url_for('static', filename='img/slidebackground1.jpg')}}" alt="">
+      </div>
+      <div class="slide">
+        <img src="{{url_for('static', filename='img/slidebackground2.jpg')}}" alt="">
+      </div>
+      <div class="slide">
+        <img src="{{url_for('static', filename='img/slidebackground3.jpg')}}" alt="">
+      </div>
+      <div class="slide">
+        <img src="{{url_for('static', filename='img/slidebackground4.jpg')}}" alt="">
+      </div>
+      <div class="navigation-auto">
+        <div class="auto-btn1"></div>
+        <div class="auto-btn2"></div>
+        <div class="auto-btn3"></div>
+        <div class="auto-btn4"></div>
+      </div>
+    </div>
+    <div class="navigation-manual">
+      <label for="radio1" class="manual-btn"></label>
+      <label for="radio2" class="manual-btn"></label>
+      <label for="radio3" class="manual-btn"></label>
+      <label for="radio4" class="manual-btn"></label>
+    </div>
+  </div>
+<!-- </section> -->
+
+{% endblock %}
+
+{% block body %}
+ <section class="children has-background-light is-fullheight" id="children">
+  <h1 class="heading"> <span>Children</span> </h1>
+<!--   <div class="books">
+      <div class="bookContainer" id="">
+          <div class="bookContainerImage">
+              <img src="{{url_for('static', filename='imgs/Ginger the Giraffe.jpg')}}">
+          </div>
+          <div class="description">
+              <h4>Ginger the Giraffe</h4>
+              <h5>T. Albert</h5>
+              <button>Download</button>
+          </div>
+      </div>
+    </div> -->
+  </section> 
+  <section class="teensAndAdult has-background-light is-fullheight" id="teensAndAdult">
+   <h1 class="heading"> <span>teensAndAdult</span> </h1>
+  </section> 
+  <section class="news has-background-light is-fullheight" id="news">
+   <h1 class="heading"> <span>news</span> </h1>
+  </section> 
+  <section class="contactUs has-background-light is-fullheight" id="contactUs">
+   <h1 class="heading"> <span>contactUs</span> </h1>
+  </section> 
+  {% endblock %}

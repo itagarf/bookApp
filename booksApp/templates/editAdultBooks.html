@@ -1,0 +1,32 @@
+{% extends "adminHome.html" %}
+
+{% block books %}
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Edit Book</h3>
+                </div>
+                <form role="form" action="/edit-adult-books/{{ book.bookId }}" method="post" enctype="multipart/form-data">
+                  <div class="card-body">
+                    <div class="form-group">
+                      <label>Select Image </label>
+                      <input type="file" name="image" value="{{ book.image }}">
+                      <input type="text" class="form-control" name="title" placeholder="Enter Title" value="{{ book.title }}">
+                      <input type="text" class="form-control" name="author" placeholder="Enter Author" value="{{ book.author }}">
+                      <input type="hidden"  name="bookId"  value="{{ book.bookId }}">
+                    </div>  
+                  </div>
+  
+                  <div class="card-footer">
+                    <button type="submit" class="button is-primary is-fullwidth">Save</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            </div>
+        </div>
+
+{% endblock %}

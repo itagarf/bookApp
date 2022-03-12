@@ -1,9 +1,11 @@
+
 from flask import Flask, render_template, redirect, url_for, request, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, LoginManager, login_user, login_required, current_user, logout_user
 from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
+from werkzeug.utils import secure_filename
+#from flask_admin.contrib.sqla import ModelView
 #import pymysql
 #import secrets
 
@@ -99,7 +101,7 @@ def loggedIn():
     user = User.query.filter_by(email=email).first()
 
     if not user or not check_password_hash(user.password, password):
-        flash('Please check your login details and try again.', category='error')
+        flash('Invalid email or password! Please check your login details and try again.', category='error')
         return redirect(url_for('login'))
 
     login_user(user, remember=remember)
@@ -131,11 +133,100 @@ def home():
 def adminHome():
     return render_template('adminHome.html', fullname= current_user.fullname)
 
-
 @app.route('/premium')
 def premium():
     return 'Premium Page'
     
+
+@app.route('/add-children-book-details')
+@login_required
+def childrenBooks():
+    return render_template('addChildrenBooks.html')
+
+@app.route('/add-children-book-details', methods=['POST'])
+@login_required
+def addChilrenBooks():
+    image = request.files['image']
+    title = request.form['title']
+    author = request.form['author']
+    
+    filename = secure_filename(image.filename)
+
+    new_book = ChildrenBooks(image=image.read(), title=title, author=author, filename=filename)
+    db.session.add(new_book)
+    db.session.commit()
+    flash('Book details added!', category='success')
+    return redirect(url_for('childrenBooks'))
+    #return "Added!"
+
+@app.route('/update-children-books')
+def updateChildrenBooks():
+    books=ChildrenBooks.query.all()
+    return render_template('updateChildrenBooks.html', books=books)
+
+@app.route('/edit-children-books/<int:bookId>', methods=['POST', 'GET'])
+def editChildrenBooks(bookId):
+    book = ChildrenBooks.query.get(bookId)
+    if request.method == 'POST':
+        image = request.files['image']
+        book.image = image.read()
+        book.title = request.form['title']
+        book.author = request.form['author']
+        book.filename = secure_filename(image.filename)
+
+        db.session.commit()
+        flash('Details of book updated', category='success')
+        return redirect('/update-children-books')
+        
+    else:
+        return render_template('editChildrenBooks.html', book=book)
+
+
+
+
+@app.route('/add-adult-book-details')
+@login_required
+def adultBooks():
+    return render_template('addAdultBooks.html')
+
+@app.route('/add-adult-book-details', methods=['POST'])
+@login_required
+def addAdultBooks():
+    image = request.files['image']
+    title = request.form['title']
+    author = request.form['author']
+    
+    filename = secure_filename(image.filename)
+
+    new_book = AdultBooks(image=image.read(), title=title, author=author, filename=filename)
+    db.session.add(new_book)
+    db.session.commit()
+    flash('Book details added!', category='success')
+    return redirect(url_for('adultBooks'))
+    #return "Added!"
+
+@app.route('/update-adult-books')
+def updateAdultBooks():
+    books=AdultBooks.query.all()
+    return render_template('updateAdultBooks.html', books=books)
+
+@app.route('/edit-adult-books/<int:bookId>', methods=['POST', 'GET'])
+def editAdultBooks(bookId):
+    book = AdultBooks.query.get(bookId)
+    if request.method == 'POST':
+        image = request.files['image']
+        book.image = image.read()
+        book.title = request.form['title']
+        book.author = request.form['author']
+        book.filename = secure_filename(image.filename)
+
+        db.session.commit()
+        flash('Details of book updated', category='success')
+        return redirect('/update-adult-books')
+        
+    else:
+        return render_template('editAdultBooks.html', book=book)
+
 
 
 
@@ -151,6 +242,32 @@ class User(UserMixin, db.Model):
         self.email = email
         self.password = password
         self.is_admin = is_admin
+
+class ChildrenBooks(db.Model):
+    bookId = db.Column(db.Integer, primary_key=True)
+    image = db.Column(db.LargeBinary)
+    title = db.Column(db.String(50), unique=True)
+    author = db.Column(db.String(50))
+    filename = db.Column(db.String(50))
+
+    def __init__(self, image, title, author, filename):
+        self.image = image
+        self.title = title 
+        self.author = author
+        self.filename = filename
+
+class AdultBooks(db.Model):
+    bookId = db.Column(db.Integer, primary_key=True)
+    image = db.Column(db.LargeBinary)
+    title = db.Column(db.String(50), unique=True)
+    author = db.Column(db.String(50))
+    filename = db.Column(db.String(50))
+
+    def __init__(self, image, title, author, filename):
+        self.image = image
+        self.title = title 
+        self.author = author
+        self.filename = filename
 
 if __name__ == '__main__':
         app.run(debug='TRUE')

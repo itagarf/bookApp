@@ -1,0 +1,36 @@
+
+{% extends "adminHome.html" %}
+
+{% block books %}
+
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-12">
+    <div class="card card-primary">
+      <div class="card-header">
+        <h3 class="card-title">Add Children Books</h3>
+      </div>
+      <form role="form" action="/add-children-book-details" method="post" enctype="multipart/form-data">
+        <div class="card-body">
+          <div class="form-group">
+            Select image of Book
+            <input type="file" name="image"/>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="title" name="title" placeholder="Enter book title"/>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="author" name="author" placeholder="Enter book author"/>
+        </div>
+        </div>
+        <div class="card-footer">
+          <button type="submit" class="button is-primary is-fullwidth">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  </div>
+</div>
+
+{% endblock %}
+

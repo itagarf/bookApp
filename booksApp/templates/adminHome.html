@@ -1,7 +1,70 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="title">
-  Hello {{ fullname }}, welcome to the admin Page
-</h1>
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<nav class="mt-2">
+  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+    <li class="nav-item">
+    <a href="{{ url_for('childrenBooks') }}" class="nav-link">
+      <p>
+        Add Children Book Details
+      </p>
+    </a>
+  </li>
+  <li class="nav-item">
+  <a href="{{ url_for('updateChildrenBooks') }}" class="nav-link">
+    <p>
+      Edit Children Book Details
+    </p>
+  </a>
+</li>
+<li class="nav-item">
+<a href="{{ url_for('adultBooks') }}" class="nav-link">
+  <p>
+    Add Adult Book Details
+  </p>
+</a>
+</li>
+<li class="nav-item">
+<a href="{{ url_for('updateAdultBooks') }}" class="nav-link">
+<p>
+  Edit Adult Book Details
+</p>
+</a>
+</li>
+<li class="nav-item">
+<a href="{{ url_for('admin_register') }}" class="nav-link">
+    <p>
+      Register New Admin User
+    </p>
+  </a>
+</li>
+</ul>
+</nav>
+
+</aside>
+
+{% block books %}
 {% endblock %}
+
+<!-- <div class="column is-4 is-offset-4">
+  <h3 class="title">Add Books</h3>
+    <div class="box">
+      <form method="POST" action="/admin-home" enctype="multipart/form-data">
+        <div class="form-group">
+            Select image of Book
+            <input type="file" name="image"/>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="title" name="title" placeholder="Enter book title"/>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="author" name="author" placeholder="Enter book author"/>
+        </div>
+        <button type="submit" class="button is-block is-primary is-fullwidth">Save</button>
+      </form>
+    </div>
+</div> -->
+{% endblock %}
+
