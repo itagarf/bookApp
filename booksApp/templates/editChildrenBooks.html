@@ -1,17 +1,14 @@
 {% extends "adminHome.html" %}
 
-{% block books %}
+{% block admin %}
 
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-              <!-- general form elements -->
               <div class="card card-primary">
                 <div class="card-header">
                   <h3 class="card-title">Edit Book</h3>
                 </div>
-                <!-- /.card-header -->
-                <!-- form start -->
                 <form role="form" action="/edit-children-books/{{ book.bookId }}" method="post" enctype="multipart/form-data">
                   <div class="card-body">
                     <div class="form-group">
@@ -19,17 +16,16 @@
                       <input type="file" name="image" value="{{ book.image }}">
                       <input type="text" class="form-control" name="title" placeholder="Enter Title" value="{{ book.title }}">
                       <input type="text" class="form-control" name="author" placeholder="Enter Author" value="{{ book.author }}">
+                      <input type="text" class="form-control" name="price" placeholder="Enter the price" value="{{ book.price }}">
                       <input type="hidden"  name="bookId"  value="{{ book.bookId }}">
                     </div>  
                   </div>
-                  <!-- /.card-body -->
   
                   <div class="card-footer">
                     <button type="submit" class="button is-primary is-fullwidth">Save</button>
                   </div>
                 </form>
               </div>
-              <!-- /.card -->
             </div>
             </div>
         </div>

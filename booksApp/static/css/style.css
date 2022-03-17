@@ -86,30 +86,45 @@ section{
 .btn:hover{
     background:green;
 }
-/* first page header*/
+/* Admin*/
+.adminPage{
+  width: 100%;
+}
+.adminSideBar{
+  width: 20%;
+  float: left;
+  
+}
+.adminMainPage{
+  width: 80%;
+  float: right;
+}
 
 /*home*/
 
 .quoteContainer{
     background-size: cover;
     background-position: center;
+    position:fixed;
+    width:100%;
 }
 .quoteContainer .middleQuote{
     display:flex;
     align-items: center;
     flex-wrap: wrap;
     gap:1.5rem;
+    width: 55%;
 }
 .quoteContainer .middleQuote .quote{
-    flex:1 1 42rem;
+    flex:1 1 40rem;
 }
 .quoteContainer .middleQuote .quote h3{
     color:#444;
-    font-size: 25px;
+    font-size: 35px;
 }
 .quoteContainer .middleQuote .quote p{
     color:#444;
-    font-size: 18px;
+    font-size: 15px;
     line-height: 2;
     padding:1rem 0;
 }
@@ -129,7 +144,7 @@ section{
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
     gap:1.5rem;
-    background: #999DA0;
+    width: 55%;
 }
 
 .iconsContainer .icons{
@@ -140,19 +155,19 @@ section{
 }
 
 .iconsContainer .icons i{
-    font-size: 1.5rem;
-    color:aliceblue;
+    font-size: 2rem;
+    color:var(--black);
 }
 
 .iconsContainer .icons h3{
-    font-size: 2.2rem;
-    color:aliceblue;
+    font-size: 1.2rem;
+    color:var(--black);
     padding-bottom: .5rem;
 }
 
 .iconsContainer .icons p{
-    font-size: 1.4rem;
-    color:aliceblue;
+    font-size: 1rem;
+    color:var(--black);
 }
 
 /* slides in the home page */
@@ -242,3 +257,139 @@ section{
   #radio4:checked ~ .navigation-auto .auto-btn4{
     background: #40D3DC;
   }
+
+
+  /* Books section */
+
+  
+
+.books{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  min-height: 100vh;
+}  
+.bookContainer{
+  display: flex;
+  width: 210px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgb(0,0,0,25%);
+  margin: 3px;
+}
+
+.bookContainerImage{
+  width:100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.bookContainerImage img{
+  width: 100%;
+  height: 240px;
+}
+
+.bookContainerImage img:hover{
+  cursor: pointer;
+}
+
+.description{
+  text-align: center;
+}
+.description h4{
+  font-size: 16px;
+  font-weight: 1.7rem;
+  letter-spacing: 1px;
+  color: var(--black);
+}
+.description h5{
+  font-size: 15px;
+  font-weight: 1rem;
+  color: brown;
+}
+.description button{
+  display:inline-block;
+  padding:.4rem 2rem;
+  border-radius: .3rem;
+  color:#fff;
+  background:#999DA0;
+  font-size: 1.7rem;
+  cursor: pointer;
+  font-weight: 300;
+}
+
+/* News */
+
+.newsBox{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  min-height: 50vh;
+}
+.newsContainer{
+  display: flex;
+  width: 300px;
+  height: 300px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgb(0,0,0,25%);
+  margin: 5px;
+  padding: 0 10px 0 10px;
+}
+
+/* .writeUp{
+  width:100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.link{
+  text-align: center;
+} */
+
+
+/* home section tags */
+.children, .teensAndAdult, .news, .contactUs{
+  padding: 2rem 5%;
+}
+
+/* contact box */
+
+.contactBox{
+  justify-content: center;
+  text-align: center;
+  display: flex;
+  width: 100%;
+}
+.contact{
+  display: flex;
+  flex-direction: column;
+  padding: 0 60px 0 60px;
+}
+.mainContact{
+  display: flex;
+  flex-direction: row;
+}
+.mainContact i{
+  font-size: 25px;
+  padding-right: 7px;
+}
+
+
+.footer{
+  justify-content: center;
+  text-align: center;
+  background: #444;
+  width: 100%;
+}
+.footer i{
+  color: #444;
+}

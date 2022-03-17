@@ -64,26 +64,101 @@
 {% block body %}
  <section class="children has-background-light is-fullheight" id="children">
   <h1 class="heading"> <span>Children</span> </h1>
-<!--   <div class="books">
-      <div class="bookContainer" id="">
-          <div class="bookContainerImage">
-              <img src="{{url_for('static', filename='imgs/Ginger the Giraffe.jpg')}}">
-          </div>
-          <div class="description">
-              <h4>Ginger the Giraffe</h4>
-              <h5>T. Albert</h5>
-              <button>Download</button>
-          </div>
-      </div>
-    </div> -->
+
+  <div class="books">
+    {% for cBook in cBooks %}
+    
+    <div class="bookContainer" id="{{ cBook.bookId }}">
+        <div class="bookContainerImage">
+             <img src="{{ cBook.image.url }}"> 
+        </div>
+        <div class="description">
+            <h4>{{ cBook.title }}</h4>
+            <h5>{{ cBook.author }}</h5>
+            <button class="button is-medium">{{ cBook.price }}</button>
+        </div>
+    </div>
+    
+    {% endfor %}
+  </div>
   </section> 
+
   <section class="teensAndAdult has-background-light is-fullheight" id="teensAndAdult">
    <h1 class="heading"> <span>teensAndAdult</span> </h1>
+   <div class="books">
+    {% for aBook in aBooks %}
+    <div class="bookContainer" id="{{ aBook.bookId }}">
+        <div class="bookContainerImage">
+            <img src="{{ aBook.image.url }}">
+        </div>
+        <div class="description">
+            <h4>{{ aBook.title }}</h4>
+            <h5>{{ aBook.author }}</h5>
+            <button class="button is-medium">{{ aBook.price }}</button>
+        </div>
+    </div>
+    {% endfor %}
+  </div>
   </section> 
+
   <section class="news has-background-light is-fullheight" id="news">
    <h1 class="heading"> <span>news</span> </h1>
+   <div class="newsBox">
+     {% for mainNews in news %}
+     <div class="newsContainer">
+       <p>{{ mainNews.writeUp }} <br><a href="{{ mainNews.link }}" target="_blank">read more</a></p>
+     </div>
+     {% endfor %}
+   </div>
   </section> 
   <section class="contactUs has-background-light is-fullheight" id="contactUs">
-   <h1 class="heading"> <span>contactUs</span> </h1>
-  </section> 
+   <h1 class="heading"> <span>contactUs</span> </h1><br>
+   <div class="contactBox">
+     <div class="contact">
+       <div class="mainContact">
+        <i class="fas fa-phone"></i>
+         <p>012345678</p>
+        </div>
+        <div class="mainContact">
+          <i class="fas fa-phone"></i>
+          <p>019876543</p>
+        </div>
+     </div>
+     <div class="contact">
+      <div class="mainContact">
+       <i class="fa fa-envelope"></i>
+        <p>contact@favbooks.com</p>
+       </div>
+       <div class="mainContact">
+         <i class="fa fa-facebook-square"></i>
+         <p>favbooks</p>
+       </div>
+     </div>
+     <div class="contact">
+      <div class="mainContact">
+       <i class="fa fa-twitter"></i>
+        <p>favbooks</p>
+       </div>
+       <div class="mainContact">
+         <i class="fa fa-instagram"></i>
+         <p>favbooks</p>
+       </div>
+     </div>
+     <div class="contact">
+      <div class="mainContact">
+       <i class="fa fa-linkedin"></i>
+        <p>favbooks</p>
+       </div>
+       <div class="mainContact">
+         <i class="fa fa-pinterest"></i>
+         <p>classicsfavbooks</p>
+       </div>
+     </div>
+   </div>
+  </section>
+    <div class="footer">
+    <i class="fa fa-copyright">favBooks</i>
+  </div>
   {% endblock %}
+
+ 

@@ -1,10 +1,12 @@
 
-from flask import Flask, render_template, redirect, url_for, request, flash, session
+from flask import Flask, render_template, redirect, url_for, request, flash, session, send_file
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, LoginManager, login_user, login_required, current_user, logout_user
 from flask_admin import Admin
 from werkzeug.utils import secure_filename
+import base64
+from io import BytesIO
 #from flask_admin.contrib.sqla import ModelView
 #import pymysql
 #import secrets
@@ -13,6 +15,9 @@ app= Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://favbooks:favbooks@localhost/favbooks'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 app.config['SECRET_KEY'] = '!"£$%^&*()LKJHGFDSA}:@<>?' 
+
+app.config['STRIPE_PUBLIC_KEY'] = 'pk_test_51KVgyNKT9PivCmy0V7uroHKoYEzYEukCyP5mhIw4cFXfdJRZ2laFMlQ7rj16rR8EpbSyzGZAdqs3v9ivkJuhv85s00Y4HBxgck'
+app.config['STRIPE_SECRET_KEY'] = 'sk_test_51KVgyNKT9PivCmy0cmIhCHEQq6S1E5I9o05AM4tUbEeHZSU1oCRaEt0keUaberqtnTmo7M2R1F9ENqY4SLtctdYp00yIrFwfNR'
 
 db = SQLAlchemy(app)
 
@@ -125,18 +130,31 @@ def logout():
 @app.route('/home')
 @login_required
 def home():
-    return render_template('home.html', fullname= current_user.fullname)
+
+    """ stripe.api_key = ''
+    session = stripid """
+
+
+    news = News.query.all()
+    cBooks=ChildrenBooks.query.all()
+    """ images=ChildrenBooks.query.all() """
+    aBooks = AdultBooks.query.all()
+    """ send_file(BytesIO(cBooks.image))
+    return render_template('home.html', cBooks=cBooks) """
+    """ base64Image = [base64.b64encode(ChildrenBooks).decode("utf-8") for images.image in images] """
+    return render_template('home.html', cBooks=cBooks, aBooks=aBooks, news=news)
+    
+    """ , images=base64Image )"""
+
+#https://www.reddit.com/r/flask/comments/mgu5tq/image_doesnt_display_properly_from_db/
 
 
 @app.route('/admin-home')
 @login_required
 def adminHome():
     return render_template('adminHome.html', fullname= current_user.fullname)
-
-@app.route('/premium')
-def premium():
-    return 'Premium Page'
     
+#chldren books
 
 @app.route('/add-children-book-details')
 @login_required
@@ -149,10 +167,11 @@ def addChilrenBooks():
     image = request.files['image']
     title = request.form['title']
     author = request.form['author']
+    price = request.form['price']
     
     filename = secure_filename(image.filename)
 
-    new_book = ChildrenBooks(image=image.read(), title=title, author=author, filename=filename)
+    new_book = ChildrenBooks(image=image.read(), title=title, author=author, price=price, filename=filename)
     db.session.add(new_book)
     db.session.commit()
     flash('Book details added!', category='success')
@@ -160,11 +179,13 @@ def addChilrenBooks():
     #return "Added!"
 
 @app.route('/update-children-books')
+@login_required
 def updateChildrenBooks():
     books=ChildrenBooks.query.all()
     return render_template('updateChildrenBooks.html', books=books)
 
 @app.route('/edit-children-books/<int:bookId>', methods=['POST', 'GET'])
+@login_required
 def editChildrenBooks(bookId):
     book = ChildrenBooks.query.get(bookId)
     if request.method == 'POST':
@@ -172,6 +193,7 @@ def editChildrenBooks(bookId):
         book.image = image.read()
         book.title = request.form['title']
         book.author = request.form['author']
+        book.price = request.form['price']
         book.filename = secure_filename(image.filename)
 
         db.session.commit()
@@ -182,6 +204,7 @@ def editChildrenBooks(bookId):
         return render_template('editChildrenBooks.html', book=book)
 
 
+# teens and adult books
 
 
 @app.route('/add-adult-book-details')
@@ -195,10 +218,11 @@ def addAdultBooks():
     image = request.files['image']
     title = request.form['title']
     author = request.form['author']
+    price = request.form['price']
     
     filename = secure_filename(image.filename)
 
-    new_book = AdultBooks(image=image.read(), title=title, author=author, filename=filename)
+    new_book = AdultBooks(image=image.read(), title=title, author=author, price=price, filename=filename)
     db.session.add(new_book)
     db.session.commit()
     flash('Book details added!', category='success')
@@ -206,11 +230,13 @@ def addAdultBooks():
     #return "Added!"
 
 @app.route('/update-adult-books')
+@login_required
 def updateAdultBooks():
     books=AdultBooks.query.all()
     return render_template('updateAdultBooks.html', books=books)
 
 @app.route('/edit-adult-books/<int:bookId>', methods=['POST', 'GET'])
+@login_required
 def editAdultBooks(bookId):
     book = AdultBooks.query.get(bookId)
     if request.method == 'POST':
@@ -218,6 +244,7 @@ def editAdultBooks(bookId):
         book.image = image.read()
         book.title = request.form['title']
         book.author = request.form['author']
+        book.price = request.form['price']
         book.filename = secure_filename(image.filename)
 
         db.session.commit()
@@ -226,6 +253,49 @@ def editAdultBooks(bookId):
         
     else:
         return render_template('editAdultBooks.html', book=book)
+
+
+#add news
+
+
+@app.route('/add-news')
+@login_required
+def news():
+    return render_template('addNews.html')
+
+@app.route('/add-news', methods=['POST'])
+@login_required
+def addNews():
+    writeUp = request.form['writeUp']
+    link = request.form['link']
+
+    new_news = News(writeUp=writeUp, link=link)
+    db.session.add(new_news)
+    db.session.commit()
+    flash('News details added!', category='success')
+    return redirect(url_for('news'))
+
+
+@app.route('/update-news')
+@login_required
+def updateNews():
+    news=News.query.all()
+    return render_template('updateNews.html', news=news)
+
+@app.route('/edit-news/<int:newsId>', methods=['POST', 'GET'])
+@login_required
+def editNews(newsId):
+    mainNews = News.query.get(newsId)
+    if request.method == 'POST':
+        mainNews.writeUp = request.form['writeUp']
+        mainNews.link = request.form['link']
+
+        db.session.commit()
+        flash('News updated!', category='success')
+        return redirect('/update-news')
+        
+    else:
+        return render_template('editNews.html', mainNews=mainNews)
 
 
 
@@ -245,29 +315,58 @@ class User(UserMixin, db.Model):
 
 class ChildrenBooks(db.Model):
     bookId = db.Column(db.Integer, primary_key=True)
-    image = db.Column(db.LargeBinary)
+    image = db.Column(db.LargeBinary(length=(2**32)-1))
     title = db.Column(db.String(50), unique=True)
     author = db.Column(db.String(50))
+    price = db.Column(db.DECIMAL(5,2))
     filename = db.Column(db.String(50))
 
-    def __init__(self, image, title, author, filename):
+    def __init__(self, image, title, author, price, filename):
         self.image = image
         self.title = title 
         self.author = author
+        self.price = price
         self.filename = filename
 
 class AdultBooks(db.Model):
     bookId = db.Column(db.Integer, primary_key=True)
-    image = db.Column(db.LargeBinary)
+    image = db.Column(db.LargeBinary(length=(2**32)-1))
     title = db.Column(db.String(50), unique=True)
     author = db.Column(db.String(50))
+    price = db.Column(db.DECIMAL(5,2))
     filename = db.Column(db.String(50))
 
-    def __init__(self, image, title, author, filename):
+    def __init__(self, image, title, author, price, filename):
         self.image = image
         self.title = title 
         self.author = author
+        self.price = price
         self.filename = filename
+
+
+class News(db.Model):
+    newsId = db.Column(db.Integer, primary_key=True)
+    writeUp = db.Column(db.String(255))
+    link = db.Column(db.String(255))
+
+    def __init__(self, writeUp, link):
+        self.writeUp = writeUp
+        self.link = link
+
+""" class ChildBooks(db.Model):
+    bookId = db.Column(db.Integer, primary_key=True)
+    image = db.Column(db.LargeBinary(length=(2**32)-1))
+    title = db.Column(db.String(50), unique=True)
+    filename = db.Column(db.String(50))
+
+    def __init__(self, image, title, author, price, filename):
+        self.image = image
+        self.title = title 
+        self.author = author
+        self.price = price
+        self.filename = filename
+ """
+
 
 if __name__ == '__main__':
         app.run(debug='TRUE')

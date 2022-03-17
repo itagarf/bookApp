@@ -1,0 +1,45 @@
+
+{% extends "adminHome.html" %}
+
+{% block admin %}
+    
+        <div class="container-fluid">
+  
+  
+             <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">News Details</h3>
+                </div>
+                
+                <div class="card-body table-responsive p-0">
+                  <table class="table table-hover text-nowrap">
+                    <thead>
+                      <tr>
+                        <th>News ID</th>
+                        <th>Writeup</th>
+                        <th>Link</th>
+                        <th>Edit News</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for mainNews in news %}
+                      <tr>
+                        <td>{{ mainNews.newsId }}</td>
+                        <td>{{ mainNews.writeUp }}</td>
+                        <td>{{ mainNews.link }}</td>
+                        <td><a href="/edit-news/{{ mainNews.newsId }}" class="button is-primary is-small">Edit News</a></td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      
+{% endblock %}

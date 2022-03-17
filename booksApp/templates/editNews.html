@@ -1,0 +1,31 @@
+{% extends "adminHome.html" %}
+
+{% block admin %}
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Edit News Details</h3>
+                </div>
+                <form role="form" action="/edit-news/{{ mainNews.newsId }}" method="post">
+                  <div class="card-body">
+                    <div class="form-group">
+                      <label>News </label>
+                      <input type="text" class="form-control" name="writeUp" placeholder="Enter writeup" value="{{ mainNews.writeUp }}">
+                      <input type="text" class="form-control" name="link" placeholder="Enter link" value="{{ mainNews.link }}">
+                      <input type="hidden"  name="newsId"  value="{{ mainNews.newsId }}">
+                    </div>  
+                  </div>
+  
+                  <div class="card-footer">
+                    <button type="submit" class="button is-primary is-fullwidth">Save</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            </div>
+        </div>
+
+{% endblock %}

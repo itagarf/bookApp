@@ -1,6 +1,6 @@
 {% extends "adminHome.html" %}
 
-{% block books %}
+{% block admin %}
 
         <div class="container-fluid">
             <div class="row">
@@ -16,6 +16,7 @@
                       <input type="file" name="image" value="{{ book.image }}">
                       <input type="text" class="form-control" name="title" placeholder="Enter Title" value="{{ book.title }}">
                       <input type="text" class="form-control" name="author" placeholder="Enter Author" value="{{ book.author }}">
+                      <input type="text" class="form-control" name="price" placeholder="Enter the price" value="{{ book.price }}">
                       <input type="hidden"  name="bookId"  value="{{ book.bookId }}">
                     </div>  
                   </div>
