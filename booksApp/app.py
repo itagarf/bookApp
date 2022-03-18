@@ -1,23 +1,28 @@
-
-from flask import Flask, render_template, redirect, url_for, request, flash, session, send_file
+import os
+from flask import Flask, render_template, redirect, url_for, request, flash, session, send_from_directory, send_file
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, LoginManager, login_user, login_required, current_user, logout_user
 from flask_admin import Admin
 from werkzeug.utils import secure_filename
-import base64
-from io import BytesIO
+import stripe
 #from flask_admin.contrib.sqla import ModelView
 #import pymysql
 #import secrets
+
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app= Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://favbooks:favbooks@localhost/favbooks'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 app.config['SECRET_KEY'] = '!"£$%^&*()LKJHGFDSA}:@<>?' 
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.config['STRIPE_PUBLIC_KEY'] = 'pk_test_51KVgyNKT9PivCmy0V7uroHKoYEzYEukCyP5mhIw4cFXfdJRZ2laFMlQ7rj16rR8EpbSyzGZAdqs3v9ivkJuhv85s00Y4HBxgck'
 app.config['STRIPE_SECRET_KEY'] = 'sk_test_51KVgyNKT9PivCmy0cmIhCHEQq6S1E5I9o05AM4tUbEeHZSU1oCRaEt0keUaberqtnTmo7M2R1F9ENqY4SLtctdYp00yIrFwfNR'
+
+stripe.api_key = app.config['STRIPE_SECRET_KEY']
 
 db = SQLAlchemy(app)
 
@@ -30,6 +35,13 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 
 #routes
 @app.route('/')
@@ -130,30 +142,60 @@ def logout():
 @app.route('/home')
 @login_required
 def home():
-
-    """ stripe.api_key = ''
-    session = stripid """
-
-
     news = News.query.all()
     cBooks=ChildrenBooks.query.all()
-    """ images=ChildrenBooks.query.all() """
     aBooks = AdultBooks.query.all()
-    """ send_file(BytesIO(cBooks.image))
-    return render_template('home.html', cBooks=cBooks) """
-    """ base64Image = [base64.b64encode(ChildrenBooks).decode("utf-8") for images.image in images] """
-    return render_template('home.html', cBooks=cBooks, aBooks=aBooks, news=news)
-    
-    """ , images=base64Image )"""
+    files = os.listdir(app.config['UPLOAD_FOLDER'])
+    return render_template('home.html', cBooks=cBooks, aBooks=aBooks, news=news, files=files)
 
-#https://www.reddit.com/r/flask/comments/mgu5tq/image_doesnt_display_properly_from_db/
+@app.route('/children-book-payment')
+def cPayment():
 
+    session = stripe.checkout.Session.create(
+        success_url= 'https://example.com/success',
+        cancel_url= 'https://example.com/cancel',
+        line_items=[{
+        'price': 'price_1KdzNJKT9PivCmy0IpCHd2vF',
+        'quantity': 1,
+        }],
+        mode='payment',
+    )
+    return  {'checkout_session_id':session['id'], 
+    'checkout_public_key':app.config['STRIPE_PUBLIC_KEY']}
+
+@app.route('/teens-and-adult-book-payment')
+def aPayment():
+
+    session = stripe.checkout.Session.create(
+        success_url= 'https://example.com/success',
+        cancel_url= 'https://example.com/cancel',
+        line_items=[{
+        'price': 'price_1KelkzKT9PivCmy0KWkwk0JH',
+        'quantity': 1,
+        }],
+        mode='payment',
+    )
+    return  {'checkout_session_id':session['id'], 
+    'checkout_public_key':app.config['STRIPE_PUBLIC_KEY']}
+
+    #https://dashboard.stripe.com/test/apikeys
+    #https://www.youtube.com/watch?v=cC9jK3WntR8&t=90s
+    #https://github.com/PrettyPrinted/youtube_video_code/blob/master/2020/06/12/Accepting%20Payments%20in%20Flask%20Using%20Stripe%20Checkout%20%5B2020%5D/flask_stripe/app.py    
+
+@app.route('/payment-confirmation')
+def confirmation():
+    return render_template('confirmation.html')
+
+@app.route('/checkout')
+def checkout():
+    return render_template('checkout.html')
 
 @app.route('/admin-home')
 @login_required
 def adminHome():
     return render_template('adminHome.html', fullname= current_user.fullname)
     
+
 #chldren books
 
 @app.route('/add-children-book-details')
@@ -170,6 +212,7 @@ def addChilrenBooks():
     price = request.form['price']
     
     filename = secure_filename(image.filename)
+    image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
     new_book = ChildrenBooks(image=image.read(), title=title, author=author, price=price, filename=filename)
     db.session.add(new_book)
@@ -177,6 +220,11 @@ def addChilrenBooks():
     flash('Book details added!', category='success')
     return redirect(url_for('childrenBooks'))
     #return "Added!"
+
+@app.route('/uploads/<filename>')
+def upload(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 
 @app.route('/update-children-books')
 @login_required
@@ -221,6 +269,7 @@ def addAdultBooks():
     price = request.form['price']
     
     filename = secure_filename(image.filename)
+    image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
     new_book = AdultBooks(image=image.read(), title=title, author=author, price=price, filename=filename)
     db.session.add(new_book)
@@ -353,19 +402,13 @@ class News(db.Model):
         self.writeUp = writeUp
         self.link = link
 
-""" class ChildBooks(db.Model):
+
+class ChildBooks(db.Model):
     bookId = db.Column(db.Integer, primary_key=True)
     image = db.Column(db.LargeBinary(length=(2**32)-1))
     title = db.Column(db.String(50), unique=True)
-    filename = db.Column(db.String(50))
 
-    def __init__(self, image, title, author, price, filename):
-        self.image = image
-        self.title = title 
-        self.author = author
-        self.price = price
-        self.filename = filename
- """
+
 
 
 if __name__ == '__main__':

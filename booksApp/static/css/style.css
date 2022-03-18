@@ -87,6 +87,16 @@ section{
     background:green;
 }
 /* Admin*/
+
+.main-sidebar {
+   background-color: rgb(165, 162, 162) !important
+}
+.nav-link{
+  color: #444 !important
+}
+.nav-link:hover{
+  color: #fff !important
+}
 .adminPage{
   width: 100%;
 }

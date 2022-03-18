@@ -67,19 +67,26 @@
 
   <div class="books">
     {% for cBook in cBooks %}
+      {% for file in files %}
+        {% if cBook.filename == file %}
     
     <div class="bookContainer" id="{{ cBook.bookId }}">
         <div class="bookContainerImage">
-             <img src="{{ cBook.image.url }}"> 
+             <img src="{{ url_for('upload', filename=file) }}"> 
         </div>
         <div class="description">
             <h4>{{ cBook.title }}</h4>
             <h5>{{ cBook.author }}</h5>
-            <button class="button is-medium">{{ cBook.price }}</button>
+            <button id="childrenBook" class="button is-medium">{{ cBook.price }}</button>
         </div>
     </div>
     
+        {% endif %}
+      {% endfor %}
     {% endfor %}
+    
+
+
   </div>
   </section> 
 
@@ -87,16 +94,21 @@
    <h1 class="heading"> <span>teensAndAdult</span> </h1>
    <div class="books">
     {% for aBook in aBooks %}
+      {% for file in files %}
+        {% if aBook.filename == file %}
     <div class="bookContainer" id="{{ aBook.bookId }}">
         <div class="bookContainerImage">
-            <img src="{{ aBook.image.url }}">
+            <img src="{{  url_for('upload', filename=file) }}">
         </div>
         <div class="description">
             <h4>{{ aBook.title }}</h4>
             <h5>{{ aBook.author }}</h5>
-            <button class="button is-medium">{{ aBook.price }}</button>
+            <button id="adultBook" class="button is-medium">{{ aBook.price }}</button>
         </div>
     </div>
+    
+        {% endif %}
+      {% endfor %}
     {% endfor %}
   </div>
   </section> 
@@ -157,8 +169,11 @@
    </div>
   </section>
     <div class="footer">
-    <i class="fa fa-copyright">favBooks</i>
+    <i class="fa fa-copyright">favBooks 2022</i>
   </div>
+
+  
+
   {% endblock %}
 
  
