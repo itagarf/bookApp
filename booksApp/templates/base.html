@@ -38,10 +38,10 @@
                             <a href="{{ url_for('adminHome') }}" class="navbar-item">
                                 Admin
                             </a>
+                            {% endif %}
                             <a href="{{ url_for('home') }}" class="navbar-item">
                                 Home
                             </a>
-                            {% endif %}
                             {% endif %}
                             {% if current_user.is_authenticated %}
                             {% endif %}

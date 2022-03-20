@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, redirect, url_for, request, flash, session, send_from_directory, send_file
+from flask import Flask, render_template, redirect, url_for, request, flash, session, send_from_directory, abort
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, LoginManager, login_user, login_required, current_user, logout_user
@@ -152,14 +152,22 @@ def home():
 def cPayment():
 
     session = stripe.checkout.Session.create(
-        success_url= 'https://example.com/success',
-        cancel_url= 'https://example.com/cancel',
+        # success_url= 'https://example.com/success?session_id={checkout_session_id}',
+        #cancel_url= 'https://example.com/cancel', 
+        success_url= url_for('confirmation', _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
+        cancel_url= url_for('checkout', _external=True),
         line_items=[{
         'price': 'price_1KdzNJKT9PivCmy0IpCHd2vF',
         'quantity': 1,
         }],
         mode='payment',
     )
+
+    sess = session['id']
+    email = current_user.email
+    new_session = UserSession(sessionId=sess,email=email)
+    db.session.add(new_session)
+    db.session.commit()
     return  {'checkout_session_id':session['id'], 
     'checkout_public_key':app.config['STRIPE_PUBLIC_KEY']}
 
@@ -167,28 +175,92 @@ def cPayment():
 def aPayment():
 
     session = stripe.checkout.Session.create(
-        success_url= 'https://example.com/success',
-        cancel_url= 'https://example.com/cancel',
+        success_url= url_for('confirmation', _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
+        cancel_url= url_for('checkout', _external=True),
         line_items=[{
         'price': 'price_1KelkzKT9PivCmy0KWkwk0JH',
         'quantity': 1,
         }],
         mode='payment',
     )
+
+    sess = session['id']
+    email = current_user.email
+    new_session = UserSession(sessionId=sess,email=email)
+    db.session.add(new_session)
+    db.session.commit()
     return  {'checkout_session_id':session['id'], 
     'checkout_public_key':app.config['STRIPE_PUBLIC_KEY']}
 
-    #https://dashboard.stripe.com/test/apikeys
-    #https://www.youtube.com/watch?v=cC9jK3WntR8&t=90s
-    #https://github.com/PrettyPrinted/youtube_video_code/blob/master/2020/06/12/Accepting%20Payments%20in%20Flask%20Using%20Stripe%20Checkout%20%5B2020%5D/flask_stripe/app.py    
+
+
+ 
 
 @app.route('/payment-confirmation')
+@login_required
 def confirmation():
-    return render_template('confirmation.html')
+    return render_template('confirmation.html', email= current_user.email)
+
+
+@app.route('/stripe_webhook', methods=['POST'])
+def stripe_webhook():
+    print('WEBHOOK CALLED')
+
+    if request.content_length > 1024 * 1024:
+        print('REQUEST TOO BIG')
+        abort(400)
+    payload = request.get_data()
+    sig_header = request.environ.get('HTTP_STRIPE_SIGNATURE')
+    endpoint_secret = 'whsec_07dc745262fed137ce699935fda038a5e43ae98a2f29bbdfa32145a6d5472780'
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+    except ValueError as e:
+        # Invalid payload
+        print('INVALID PAYLOAD')
+        return {}, 400
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        print('INVALID SIGNATURE')
+        return {}, 400
+
+    # Handle the checkout.session.completed event
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+        #print(session)
+        line_items = stripe.checkout.Session.list_line_items(session['id'], limit=4)
+        sess_Id = session['id']
+    
+    
+        description = line_items['data'][0]['description']
+        amount_total = line_items['data'][0]['amount_total']
+        quantity = line_items['data'][0]['quantity']
+
+        new_invoice = Invoice(sessionId=sess_Id, description=description, amount_total=amount_total, quantity=quantity)
+        db.session.add(new_invoice)
+        db.session.commit()
+    return {}   
+    
+
 
 @app.route('/checkout')
 def checkout():
     return render_template('checkout.html')
+
+@app.route('/invoice-details')
+@login_required
+def invoice():
+    invoices=Invoice.query.all()
+    return render_template('invoice.html', invoices=invoices)
+
+@app.route('/payment-session-details')
+@login_required
+def paymentSession():
+    pSessions=UserSession.query.all()
+    return render_template('paymentSession.html', pSessions=pSessions)
 
 @app.route('/admin-home')
 @login_required
@@ -276,7 +348,6 @@ def addAdultBooks():
     db.session.commit()
     flash('Book details added!', category='success')
     return redirect(url_for('adultBooks'))
-    #return "Added!"
 
 @app.route('/update-adult-books')
 @login_required
@@ -347,7 +418,7 @@ def editNews(newsId):
         return render_template('editNews.html', mainNews=mainNews)
 
 
-
+#database tables
 
 class User(UserMixin, db.Model):
     id= db.Column(db.Integer, primary_key=True)
@@ -403,12 +474,27 @@ class News(db.Model):
         self.link = link
 
 
-class ChildBooks(db.Model):
-    bookId = db.Column(db.Integer, primary_key=True)
-    image = db.Column(db.LargeBinary(length=(2**32)-1))
-    title = db.Column(db.String(50), unique=True)
+class Invoice(db.Model):
+    invoiceId = db.Column(db.Integer, primary_key=True)
+    sessionId = db.Column(db.String(100))
+    description = db.Column(db.String(50))
+    amount_total = db.Column(db.String(50))
+    quantity = db.Column(db.String(50))
 
+    def __init__(self,sessionId, description, amount_total, quantity):
+        self.description = description
+        self.sessionId = sessionId
+        self.amount_total = amount_total
+        self.quantity = quantity
 
+class UserSession(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sessionId = db.Column(db.String(100))
+    email = db.Column(db.String(50))
+
+    def __init__(self, sessionId, email):
+        self.sessionId = sessionId
+        self.email = email
 
 
 if __name__ == '__main__':
