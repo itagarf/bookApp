@@ -193,9 +193,6 @@ def aPayment():
     'checkout_public_key':app.config['STRIPE_PUBLIC_KEY']}
 
 
-
- 
-
 @app.route('/payment-confirmation')
 @login_required
 def confirmation():
