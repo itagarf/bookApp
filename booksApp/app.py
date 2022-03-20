@@ -6,6 +6,12 @@ from flask_login import UserMixin, LoginManager, login_user, login_required, cur
 from flask_admin import Admin
 from werkzeug.utils import secure_filename
 import stripe
+#from flaskext.mysql import MySQL
+
+#db = MySQL()
+ 
+# MySQL configurations
+
 #from flask_admin.contrib.sqla import ModelView
 #import pymysql
 #import secrets
@@ -14,9 +20,18 @@ UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app= Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://favbooks:favbooks@localhost/favbooks'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///favbooks.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://favbooks:favbooks@localhost/favbooks'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://b559ce8186000f:59a32fce@us-cdbr-east-05.cleardb.net/heroku_69bcacc48fef29e'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 app.config['SECRET_KEY'] = '!"£$%^&*()LKJHGFDSA}:@<>?' 
+
+#app.config['MYSQL_DATABASE_USER'] = 'b559ce8186000f'
+#app.config['MYSQL_DATABASE_PASSWORD'] = '59a32fce'
+#app.config['MYSQL_DATABASE_DB'] = 'heroku_69bcacc48fef29e'
+#app.config['MYSQL_DATABASE_HOST'] = 'us-cdbr-east-05.cleardb.net'
+#mysql.init_app(app)
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.config['STRIPE_PUBLIC_KEY'] = 'pk_test_51KVgyNKT9PivCmy0V7uroHKoYEzYEukCyP5mhIw4cFXfdJRZ2laFMlQ7rj16rR8EpbSyzGZAdqs3v9ivkJuhv85s00Y4HBxgck'
@@ -25,6 +40,7 @@ app.config['STRIPE_SECRET_KEY'] = 'sk_test_51KVgyNKT9PivCmy0cmIhCHEQq6S1E5I9o05A
 stripe.api_key = app.config['STRIPE_SECRET_KEY']
 
 db = SQLAlchemy(app)
+#db.init_app(app)
 
 admin = Admin(app, name='Admin Panel')
 
@@ -229,9 +245,9 @@ def stripe_webhook():
         session = event['data']['object']
         #print(session)
         line_items = stripe.checkout.Session.list_line_items(session['id'], limit=4)
+        
+        
         sess_Id = session['id']
-    
-    
         description = line_items['data'][0]['description']
         amount_total = line_items['data'][0]['amount_total']
         quantity = line_items['data'][0]['quantity']
@@ -495,5 +511,5 @@ class UserSession(UserMixin, db.Model):
 
 
 if __name__ == '__main__':
-        app.run(debug='TRUE')
+        #app.run(debug='TRUE')
         app.run(host = '0.0.0.0', port = 5000)
