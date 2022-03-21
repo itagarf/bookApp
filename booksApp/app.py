@@ -20,11 +20,17 @@ UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app= Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///favbooks.db'
+#DATABASE_URL = 'sqlite:///favbooks.db'
+#app.config['DATABASE_URL'] = 'sqlite:///favbooks.db'
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://favbooks:favbooks@localhost/favbooks'
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://b559ce8186000f:59a32fce@us-cdbr-east-05.cleardb.net/heroku_69bcacc48fef29e'
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
+#app.config['SECRET_KEY'] = '!"£$%^&*()LKJHGFDSA}:@<>?' 
+SECRET_KEY = '!"£$%^&*()LKJHGFDSrtyA}:@<>?' 
+
+app.config['SQLALCHEMY_DATABASE_URI']= 'postgresql://jwoywkkybxxpzl:f9ff514bb7aa287644b3882bab2c59afe046082f73a33b9e6fdf73803de7ab0a@ec2-3-231-254-204.compute-1.amazonaws.com:5432/daq09ritmm2fo4'
+app.config['SECRET_KEY'] = '!"£$%^&*()LKJHGFDSrtyA}:@<>?' 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
-app.config['SECRET_KEY'] = '!"£$%^&*()LKJHGFDSA}:@<>?' 
 
 #app.config['MYSQL_DATABASE_USER'] = 'b559ce8186000f'
 #app.config['MYSQL_DATABASE_PASSWORD'] = '59a32fce'
