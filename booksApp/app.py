@@ -1,11 +1,12 @@
 import os
-from flask import Flask, render_template, redirect, url_for, request, flash, session, send_from_directory, abort
+from flask import Flask, render_template, redirect, url_for, request, flash, session, send_from_directory, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, LoginManager, login_user, login_required, current_user, logout_user
 from flask_admin import Admin
 from werkzeug.utils import secure_filename
 import stripe
+import json
 #from flaskext.mysql import MySQL
 
 #db = MySQL()
@@ -221,16 +222,19 @@ def confirmation():
     return render_template('confirmation.html', email= current_user.email)
 
 
+endpoint_secret = 'whsec_07dc745262fed137ce699935fda038a5e43ae98a2f29bbdfa32145a6d5472780'
 @app.route('/stripe_webhook', methods=['POST'])
 def stripe_webhook():
-    print('WEBHOOK CALLED')
+    #print('WEBHOOK CALLED')
 
     if request.content_length > 1024 * 1024:
         print('REQUEST TOO BIG')
         abort(400)
-    payload = request.get_data()
-    sig_header = request.environ.get('HTTP_STRIPE_SIGNATURE')
-    endpoint_secret = 'whsec_07dc745262fed137ce699935fda038a5e43ae98a2f29bbdfa32145a6d5472780'
+    #payload = request.get_data()
+    #sig_header = request.environ.get('HTTP_STRIPE_SIGNATURE')
+    payload = request.data
+    sig_header = request.headers['STRIPE_SIGNATURE']
+    #endpoint_secret = 'whsec_07dc745262fed137ce699935fda038a5e43ae98a2f29bbdfa32145a6d5472780'
     event = None
 
     try:
@@ -261,7 +265,8 @@ def stripe_webhook():
         new_invoice = Invoice(sessionId=sess_Id, description=description, amount_total=amount_total, quantity=quantity)
         db.session.add(new_invoice)
         db.session.commit()
-    return {}   
+    return jsonify(success=True)
+   
     
 
 
