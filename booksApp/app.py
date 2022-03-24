@@ -222,20 +222,38 @@ def confirmation():
     return render_template('confirmation.html', email= current_user.email)
 
 
-stripe.WebhookEndpoint.create(
-    url="https://favbooksweb.herokuapp.com/stripe-webhook",
-    #url="127.0.0.1/stripe-webhook",
-    enabled_events=[
-        "charge.failed",
-        "charge.succeeded",
-        ],
-        )
+#stripe.WebhookEndpoint.create(
+ #   url="https://favbooksweb.herokuapp.com/stripe-webhook",
+  #  enabled_events=[
+    #    "charge.failed",
+     #   "charge.succeeded",
+      #  ],
+       # )
 #x = stripe.checkout.Session.retrieve("cs_test_a1MMm7trkQUgbhXdA0cF409YwHbAxAnsIU2eBxUqx43tawmYXRzQ7N9hqi",)
 #print(x)
+
 endpoint_secret = 'whsec_07dc745262fed137ce699935fda038a5e43ae98a2f29bbdfa32145a6d5472780'
 @app.route('/stripe-webhook', methods=['POST'])
 def stripeWebhook():
-    pass
+
+    if request.content_length > 1024 * 1024:
+        print('REQUEST TOO BIG')
+        abort(400)
+    payload = request.get_data()
+    sig_header = request.environ.get('HTTP_STRIPE_SIGNATURE')
+    endpoint_secret = 'whsec_07dc745262fed137ce699935fda038a5e43ae98a2f29bbdfa32145a6d5472780'
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+    except ValueError as e:
+        return {}, 400
+    except stripe.error.SignatureVerificationError as e:
+        return {}, 400
+    
+    return {}, 200
 
 
 """ 
