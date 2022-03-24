@@ -2,20 +2,30 @@
 
 {% block navigation %}
 
-<div class="hero-head">
-  <nav class="navbar">
-      <div class="container">
-          <div id="navbarMenuHeroA" class="navbar-menu">
-              <div class="navbar-end">
-                  <a href="#home" class="navbar-item">Home</a>
-                  <a href="#children" class="navbar-item">Children</a>
-                  <a href="#teensAndAdult" class="navbar-item">Teens & Adults</a>
-                  <a href="#news" class="navbar-item">News</a>
-                  <a href="#contactUs" class="navbar-item">Contact Us</a>
-              </div>
-          </div>
+<div class="hero-head has-background-grey-light">
+
+    
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="homeNavbar">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
       </div>
-  </nav>
+    
+ <!--  <div class="container"> -->
+    <div id="homeNavbar" class="navbar-menu">
+        <div class="navbar-end">
+            <a href="#home" class="navbar-item">Home</a>
+            <a href="#children" class="navbar-item">Children</a>
+            <a href="#teensAndAdult" class="navbar-item">Teens & Adults</a>
+            <a href="#news" class="navbar-item">News</a>
+            <a href="#contactUs" class="navbar-item">Contact Us</a>
+        </div>
+    </div>
+<!-- </div> -->
+</nav>
 </div>
 
 {% endblock %}
@@ -167,9 +177,6 @@
      </div>
    </div>
   </section>
-    <div class="footer">
-    <i class="fa fa-copyright">favBooks 2022</i>
-  </div>
 
   
 

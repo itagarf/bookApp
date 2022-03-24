@@ -22,47 +22,53 @@
   />
 </head>
 <body><!--  style="background-image: url({{ url_for('static', filename = 'img/homebackground.jpg')}});" -->
-    <section class="hero has-background-light is-fullheight" >
-        <div class="hero-head has-background-grey-light">
-            <nav class="navbar">
-                <div class="container">
-                    <div id="navbarMenuHeroA" class="navbar-menu">
-                        <div class="navbar-brand">
-                            <a class="navbar-item" href="/">
-                                <img src="{{url_for('static', filename='img/booklogo.png')}}" width="45" height="60">
-                            </a>
-                        </div>
-                        <div class="navbar-end">
-                            {% if current_user.is_authenticated %}
-                            {% if current_user.is_admin %}
-                            <a href="{{ url_for('adminHome') }}" class="navbar-item">
-                                Admin
-                            </a>
-                            {% endif %}
-                            <a href="{{ url_for('home') }}" class="navbar-item">
-                                Home
-                            </a>
-                            {% endif %}
-                            {% if current_user.is_authenticated %}
-                            {% endif %}
-                            {% if not current_user.is_authenticated %}
-                            <a href="{{ url_for('register') }}" class="navbar-item">
-                                Register
-                            </a>
-                            <a href="{{ url_for('login') }}" class="navbar-item">
-                                Login
-                            </a>
-                            {% endif %}
-                            {% if current_user.is_authenticated %}
-                            <a href="{{ url_for('logout') }}" class="navbar-item">
-                                Logout
-                            </a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </nav>
+
+  
+    <nav class="navbar is-fullweight" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+          <a class="navbar-item" href="/">
+            <img src="{{url_for('static', filename='img/booklogo.png')}}" width="45" height="60">
+          </a>
+      
+          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="myNavbar">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
         </div>
+        
+    </nav>
+    
+        <div id="myNavbar" class="navbar-menu">
+          <div class="navbar-end">
+              {% if current_user.is_authenticated %}
+              {% if current_user.is_admin %}
+              <a href="{{ url_for('adminHome') }}" class="navbar-item">
+                  Admin
+              </a>
+              {% endif %}
+              <a href="{{ url_for('home') }}" class="navbar-item">
+                  Home
+              </a>
+              {% endif %}
+              {% if current_user.is_authenticated %}
+              {% endif %}
+              {% if not current_user.is_authenticated %}
+              <a href="{{ url_for('register') }}" class="navbar-item">
+                  Register
+              </a>
+              <a href="{{ url_for('login') }}" class="navbar-item">
+                  Login
+              </a>
+              {% endif %}
+              {% if current_user.is_authenticated %}
+              <a href="{{ url_for('logout') }}" class="navbar-item">
+                  Logout
+              </a>
+              {% endif %}
+          </div>
+        </div>
+    <section class="hero has-background-light is-fullheight" >
 
         {% with messages = get_flashed_messages(with_categories=true) %} 
         {% if messages %} 
@@ -97,6 +103,10 @@
     </section>
     {% block body %}
     {% endblock %}
+    
+    <div class="hero-foot">
+      <i class="fa fa-copyright">favBooks 2022</i>
+    </div>
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
       integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

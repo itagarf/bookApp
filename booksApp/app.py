@@ -222,7 +222,23 @@ def confirmation():
     return render_template('confirmation.html', email= current_user.email)
 
 
+stripe.WebhookEndpoint.create(
+    url="https://favbooksweb.herokuapp.com/stripe-webhook",
+    #url="127.0.0.1/stripe-webhook",
+    enabled_events=[
+        "charge.failed",
+        "charge.succeeded",
+        ],
+        )
+#x = stripe.checkout.Session.retrieve("cs_test_a1MMm7trkQUgbhXdA0cF409YwHbAxAnsIU2eBxUqx43tawmYXRzQ7N9hqi",)
+#print(x)
 endpoint_secret = 'whsec_07dc745262fed137ce699935fda038a5e43ae98a2f29bbdfa32145a6d5472780'
+@app.route('/stripe-webhook', methods=['POST'])
+def stripeWebhook():
+    pass
+
+
+""" 
 @app.route('/stripe_webhook', methods=['POST'])
 def stripe_webhook():
     #print('WEBHOOK CALLED')
@@ -230,11 +246,11 @@ def stripe_webhook():
     if request.content_length > 1024 * 1024:
         print('REQUEST TOO BIG')
         abort(400)
-    #payload = request.get_data()
-    #sig_header = request.environ.get('HTTP_STRIPE_SIGNATURE')
-    payload = request.data
-    sig_header = request.headers['STRIPE_SIGNATURE']
-    #endpoint_secret = 'whsec_07dc745262fed137ce699935fda038a5e43ae98a2f29bbdfa32145a6d5472780'
+    payload = request.get_data()
+    sig_header = request.environ.get('HTTP_STRIPE_SIGNATURE')
+    #payload = request.data
+    #sig_header = request.headers['STRIPE_SIGNATURE']
+    endpoint_secret = 'whsec_07dc745262fed137ce699935fda038a5e43ae98a2f29bbdfa32145a6d5472780'
     event = None
 
     try:
@@ -251,23 +267,36 @@ def stripe_webhook():
         return {}, 400
 
     # Handle the checkout.session.completed event
-    if event['type'] == 'checkout.session.completed':
-        session = event['data']['object']
-        #print(session)
-        line_items = stripe.checkout.Session.list_line_items(session['id'], limit=4)
-        
-        
-        sess_Id = session['id']
-        description = line_items['data'][0]['description']
-        amount_total = line_items['data'][0]['amount_total']
-        quantity = line_items['data'][0]['quantity']
-
-        new_invoice = Invoice(sessionId=sess_Id, description=description, amount_total=amount_total, quantity=quantity)
-        db.session.add(new_invoice)
-        db.session.commit()
-    return jsonify(success=True)
-   
+    if event.type == 'payment_intent.succeeded':
+        payment_intent = event.data.object # contains a stripe.PaymentIntent
+        print('PaymentIntent was successful!')
+    elif event.type == 'payment_method.attached':
+        payment_method = event.data.object # contains a stripe.PaymentMethod
+        print('PaymentMethod was attached to a Customer!')
+    # ... handle other event types)
     
+    else:
+        print('Unhandled event type {}')
+    #return jsonify(success=True)
+    return {}, 200
+    """
+    
+    
+       # elif event['type'] == 'checkout.session.completed':
+        #session = event['data']['object']
+        ###print(session)
+        #line_items = stripe.checkout.Session.list_line_items(session['id'], limit=4)
+        
+        
+        #sess_Id = session['id']
+        #description = line_items['data'][0]['description']
+        #amount_total = line_items['data'][0]['amount_total']
+        #quantity = line_items['data'][0]['quantity']
+
+        #new_invoice = Invoice(sessionId=sess_Id, description=description, amount_total=amount_total, quantity=quantity)
+        #db.session.add(new_invoice)
+        #db.session.commit() """
+        
 
 
 @app.route('/checkout')
