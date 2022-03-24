@@ -49,7 +49,7 @@ stripe.api_key = app.config['STRIPE_SECRET_KEY']
 db = SQLAlchemy(app)
 #db.init_app(app)
 
-admin = Admin(app, name='Admin Panel')
+admin = Admin(app, base_template='adminHome.html')
 
 login_manager = LoginManager()
 login_manager.login_view = 'login'
@@ -105,6 +105,7 @@ def admin_register():
     return render_template('adminRegister.html')
 
 @app.route('/admin_register', methods=['POST'])
+@login_required
 def admin_registered():
     session['secret']='sec'
     fullname = request.form.get('fullname')
@@ -365,6 +366,7 @@ def addChilrenBooks():
     #return "Added!"
 
 @app.route('/uploads/<filename>')
+@login_required
 def upload(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 

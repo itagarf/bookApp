@@ -1,4 +1,8 @@
+
+{% if current_user.is_admin %}
+
 {% extends "base.html" %}
+
 
 {% block content %}
 
@@ -87,3 +91,4 @@
 
 {% endblock %}
 
+{% endif %}
