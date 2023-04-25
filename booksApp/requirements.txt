@@ -32,7 +32,7 @@ PyMySQL==1.0.2
 requests==2.26.0
 six==1.16.0
 SQLAlchemy==1.4.32
-sqlparse==0.4.2
+sqlparse==0.4.4
 stripe==2.67.0
 tzdata==2021.5
 urllib3==1.26.7
