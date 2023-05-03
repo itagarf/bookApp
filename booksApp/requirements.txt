@@ -9,7 +9,7 @@ distlib==0.3.4
 Django==4.1.7
 docopt==0.6.2
 filelock==3.6.0
-Flask==1.1.1
+Flask==2.2.5
 Flask-Admin==1.6.0
 Flask-Login==0.5.0
 Flask-MySQL==1.5.2
